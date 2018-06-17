@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import format from 'date-fns/format';
 import { Segment, Grid, Icon, Button } from 'semantic-ui-react';
 
 import EventDetailsMap from './EventDetailsMap';
@@ -6,15 +7,22 @@ import EventDetailsMap from './EventDetailsMap';
 class EventDetailsInfo extends Component {
   state = {
     showMap: false
+  };
+
+  componentWillMount() {
+    this.setState({
+      showMap: false
+    })
   }
 
   showMapToggle = () => {
     this.setState(prevState => ({
       showMap: !prevState.showMap
-    }))
-  }
+    }));
+  };
+
   render() {
-    const {event} = this.props
+    const { event } = this.props;
     return (
       <Segment.Group>
         <Segment attached="top">
@@ -33,7 +41,7 @@ class EventDetailsInfo extends Component {
               <Icon name="calendar" size="large" color="teal" />
             </Grid.Column>
             <Grid.Column width={15}>
-              <span>{event.date}</span>
+              <span>{format(event.date, 'dddd Do MMMM')} at {format(event.date, 'h:mm A')}</span>
             </Grid.Column>
           </Grid>
         </Segment>
@@ -46,15 +54,24 @@ class EventDetailsInfo extends Component {
               <span>{event.venue}</span>
             </Grid.Column>
             <Grid.Column width={4}>
-              <Button color="teal" size="tiny" content={this.state.showMap ? 'Hide Map' : 'Show Map'} onClick={this.showMapToggle} />
+              <Button
+                color="teal"
+                size="tiny"
+                content={this.state.showMap ? 'Hide Map' : 'Show Map'}
+                onClick={this.showMapToggle}
+              />
             </Grid.Column>
           </Grid>
         </Segment>
-        {this.state.showMap && 
-        <EventDetailsMap lat={event.venueLatLng.lat} lng={event.venueLatLng.lng} />}
+        {this.state.showMap && (
+          <EventDetailsMap
+            lat={event.venueLatLng.lat}
+            lng={event.venueLatLng.lng}
+          />
+        )}
       </Segment.Group>
     );
   }
-};
+}
 
 export default EventDetailsInfo;
